@@ -22,7 +22,7 @@ export default function App() {
 
   if (searchTerm !== "") {
     listToDisplay = countries.filter((country) => {
-      return ((country.name.common).toLowerCase()).includes(searchTerm);
+      return ((country.name.common).toLowerCase()).includes(searchTerm.toLowerCase());
     });
   }
 
