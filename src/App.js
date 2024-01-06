@@ -32,7 +32,7 @@ export default function App() {
   return (
     <div>
       <div className='inp'>
-      <input type='text' placeholder='Search for countries...' onChange = {(e) => debounceSearch(e,500)}></input>
+      <input type='text' placeholder='Search for countries...' onChange = {(e) => debounceSearch(e,100)}></input>
     </div>
     <div className="wrapper">
       {countries.map((country) => (
