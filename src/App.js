@@ -36,7 +36,7 @@ export default function App() {
     </div>
     <div className="wrapper">
       {countries.map((country) => (
-        <div key={country.cca3} className="styleCard">
+        <div style={{flexDirection: "column"}} key={country.cca3} className="styleCard">
           <img
             src={country.flags.png}
             alt={`Flag of ${country.name.common}`}

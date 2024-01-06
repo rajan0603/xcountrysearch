@@ -7,16 +7,17 @@
 }
 
 .styleCard {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   width: 200px;
   border-radius: 10px;
   border: 1px solid #ccc;
   margin: 10px;
   padding: 10px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
 }
+
 .cardImg {
   height: 100px;
   width: 100px;
