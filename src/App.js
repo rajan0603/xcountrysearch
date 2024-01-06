@@ -1,9 +1,13 @@
 import './App.css';
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
+import debouce from "lodash.debounce";
 
 export default function App() {
   const [countries, setCountries] = useState([]);
-  const [delay, setDelay] = useState(0);
+  const [searchTerm, setSearchTerm] = useState("");
+  // const [delay, setDelay] = useState(0);
+
+  let listToDisplay = countries;
 
   useEffect(() => {
     fetch("https://restcountries.com/v3.1/all")
@@ -12,30 +16,50 @@ export default function App() {
       .catch((error) => console.error("Error fetching data: ", error));
   }, []);
 
-  const performSearch = (e) => {
-    let keyword = (e.target.value).toLowerCase();
-    const newData = countries.filter((country) => ((country.name.common).toLowerCase()).match(keyword));
-    console.log(newData)
-    if(newData){
-      setCountries(newData);
-    }
+  const handleChange = (e) => {
+    setSearchTerm(e.target.value);
+  };
+
+  if (searchTerm !== "") {
+    listToDisplay = countries.filter((country) => {
+      return ((country.name.common).toLowerCase()).includes(searchTerm);
+    });
   }
 
-  const debounceSearch = (e,time) => {
-    if(delay !== 0){
-      clearTimeout(delay);
-    }
-    const timer = setTimeout(() => performSearch(e),time);
-    setDelay(timer);
-  }
+  const debouncedResults = useMemo(() => {
+    return debouce(handleChange, 300);
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      debouncedResults.cancel();
+    };
+  });
+
+  // const performSearch = (e) => {
+  //   let keyword = (e.target.value).toLowerCase();
+  //   const newData = countries.filter((country) => ((country.name.common).toLowerCase()).match(keyword));
+  //   console.log(newData)
+  //   if(newData){
+  //     setCountries(newData);
+  //   }
+  // }
+
+  // const debounceSearch = (e,time) => {
+  //   if(delay !== 0){
+  //     clearTimeout(delay);
+  //   }
+  //   const timer = setTimeout(() => performSearch(e),time);
+  //   setDelay(timer);
+  // }
 
   return (
     <div>
       <div className='inp'>
-      <input type='text' placeholder='Search for countries...' onChange = {(e) => debounceSearch(e,100)}></input>
+      <input type='text' placeholder='Search for countries...' onChange = {debouncedResults}></input>
     </div>
     <div className="wrapper">
-      {countries.map((country) => (
+      {listToDisplay.map((country) => (
         <div style={{flexDirection: "column"}} key={country.cca3} className="styleCard">
           <img
             src={country.flags.png}
